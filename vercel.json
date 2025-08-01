@@ -2,7 +2,8 @@
   "rewrites": [
     { "source": "/dashboard", "destination": "/api/dashboard.php" },
     { "source": "/login", "destination": "/api/login.php" },
-    { "source": "/logout", "destination": "/api/logout.php" }
+    { "source": "/logout", "destination": "/api/logout.php" },
+    { "source": "/", "destination": "/api/dashboard.php" }
   ],
   "functions": {
     "api/*.php": {
