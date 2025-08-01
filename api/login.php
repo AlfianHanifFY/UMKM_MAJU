@@ -1,16 +1,16 @@
 <?php
-session_start();
-
+// Mulai tidak perlu session_start karena kita pakai cookie
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = $_POST['email'] ?? '';
     $password = $_POST['password'] ?? '';
 
-    // TODO: ganti ke cek DB di real project
+    // Ganti ini ke validasi dari DB nantinya
     $validUser = ($email === 'admin@example.com' && $password === 'admin123');
 
     if ($validUser) {
-        $_SESSION['user'] = $email;
-        header("Location: /api/");
+        // Set cookie untuk menyimpan status login selama 1 jam
+        setcookie("user", $email, time() + 3600, "/");
+        header("Location: /dashboard"); // pastikan ini diarahkan via vercel.json
         exit;
     } else {
         $error = "Email atau password salah.";

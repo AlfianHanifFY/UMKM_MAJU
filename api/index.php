@@ -1,10 +1,9 @@
 <?php
-session_start();
-
-if (!isset($_SESSION['user'])) {
-    header("Location: /api/login.php");
+if (!isset($_COOKIE['user'])) {
+    header("Location: /login");
     exit;
 }
+
 
 require_once __DIR__ . '/layout/layout.php';
 
