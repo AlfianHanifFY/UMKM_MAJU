@@ -1,22 +1,27 @@
 <?php
-// Mulai tidak perlu session_start karena kita pakai cookie
+if (isset($_COOKIE['user'])) {
+    header("Location: /dashboard");
+    exit;
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = $_POST['email'] ?? '';
     $password = $_POST['password'] ?? '';
 
-    // Ganti ini ke validasi dari DB nantinya
     $validUser = ($email === 'admin@example.com' && $password === 'admin123');
 
     if ($validUser) {
-        // Set cookie untuk menyimpan status login selama 1 jam
+        // Set cookie dan redirect dengan JS agar cookie diproses
         setcookie("user", $email, time() + 3600, "/");
-        header("Location: /dashboard"); // pastikan ini diarahkan via vercel.json
+        echo "<script>window.location.href='/dashboard';</script>";
         exit;
     } else {
         $error = "Email atau password salah.";
     }
 }
 ?>
+<!-- lanjut ke HTML seperti biasa -->
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -30,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <body class="hold-transition login-page">
     <div class="login-box">
-        <div class="card card-outline card-primary">
+        <div class="card card-outline card-info">
             <div class="card-header text-center">
                 <a href="#" class="h1"><b>Teman</b>Usaha</a>
             </div>
@@ -56,13 +61,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                     <div class="row">
                         <div class="col-8">
-                            <div class="icheck-primary">
+                            <div class="icheck-info">
                                 <input type="checkbox" id="remember">
                                 <label for="remember">Remember Me</label>
                             </div>
                         </div>
                         <div class="col-4">
-                            <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+                            <button type="submit" class="btn btn-info btn-block">Sign In</button>
                         </div>
                     </div>
                 </form>

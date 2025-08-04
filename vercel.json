@@ -1,11 +1,5 @@
 {
-  "rewrites": [
-    {
-      "source": "/(dashboard|login|logout|order|user)",
-      "destination": "/api/index.php"
-    },
-    { "source": "/", "destination": "/api/index.php" }
-  ],
+  "rewrites": [{ "source": "/(.*)", "destination": "/api/index.php" }],
   "functions": {
     "api/*.php": {
       "runtime": "vercel-php@0.7.3"
