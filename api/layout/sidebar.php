@@ -16,7 +16,7 @@
                 <li class="nav-item">
                     <a href="/dashboard/cabang" class="nav-link <?= isActive('/cabang') ?>">
                         <i class="nav-icon fas fa-users"></i>
-                        <p>Cabang</p>
+                        <p>Cabang Usaha</p>
                     </a>
                 </li>
                 <li class="nav-item">

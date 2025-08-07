@@ -1,5 +1,8 @@
 <?php
-if (isset($_COOKIE['user'])) {
+
+require_once __DIR__ . '/../../model/user.php';
+
+if (isset($_COOKIE['token'])) {
     header("Location: /dashboard");
     exit;
 }
@@ -8,11 +11,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = $_POST['email'] ?? '';
     $password = $_POST['password'] ?? '';
 
-    $validUser = ($email === 'admin@example.com' && $password === 'admin123');
-
+    $validUser = validate_user($email, $password);
+    print_r($validUser);
     if ($validUser) {
         // Set cookie dan redirect dengan JS agar cookie diproses
-        setcookie("user", $email, time() + 3600, "/");
+        setcookie("token", $validUser['tu_users_id'], time() + 3600, "/");
         echo "<script>window.location.href='/dashboard';</script>";
         exit;
     } else {

@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/../../model/user.php';
-
-$data = get_all_shuttle();
+$user = get_user($_COOKIE['token']);
+$nama = $user['display_name'];
 ?>
 
 <div class="content">
@@ -12,7 +12,7 @@ $data = get_all_shuttle();
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Beranda</h1>
+                    <h1 class="m-0">Halo, <?php echo $nama?>!</h1>
                 </div><!-- /.col -->
 
             </div><!-- /.row -->

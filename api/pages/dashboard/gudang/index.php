@@ -1,3 +1,15 @@
+<?php 
+require_once __DIR__ . '/../../../model/branch.php'; 
+require_once __DIR__ . '/../../../model/asset.php'; 
+
+$branches = get_branch($_COOKIE['token']);
+
+$selected_branch_id = $branches[0]['tu_user_branch_id'] ?? null;
+$assets = $selected_branch_id ? get_branch_asset($selected_branch_id) : [];
+?>
+
+
+
 <section class="content m-4">
     <div class="card card-default">
         <div class="card-header">
@@ -14,14 +26,13 @@
         <div class="card-body">
             <div class="form-group">
                 <label>Nama</label>
-                <select class="form-control select2" style="width: 100%;">
-                    <option selected>Alabama</option>
-                    <option>Alaska</option>
-                    <option>California</option>
-                    <option>Delaware</option>
-                    <option>Tennessee</option>
-                    <option>Texas</option>
-                    <option>Washington</option>
+                <select class="form-control select2" style="width: 100%;" id="branchSelect">
+                    <?php foreach ($branches as $branch): ?>
+                    <option value="<?= $branch['tu_user_branch_id'] ?>"
+                        <?= $branch['tu_user_branch_id'] == $selected_branch_id ? 'selected' : '' ?>>
+                        <?= htmlspecialchars($branch['branch_name']) ?>
+                    </option>
+                    <?php endforeach; ?>
                 </select>
             </div>
         </div>
@@ -85,100 +96,33 @@
                                 </tr>
                             </thead>
                             <tbody>
-
-                                <tr class="odd">
-                                    <td class="dtr-control sorting_1" tabindex="0">Gecko</td>
-                                    <td>Firefox 1.0</td>
-                                    <td>Win 98+ / OSX.2+</td>
-                                    <td>1.7</td>
-                                    <td>A</td>
+                                <?php foreach ($assets as $asset): ?>
+                                <tr>
+                                    <td><?= htmlspecialchars($asset['name']) ?></td>
+                                    <td><?= number_format($asset['buy_price']) ?></td>
+                                    <td><?= number_format($asset['sell_price']) ?></td>
+                                    <td><?= $asset['quantity'] ?></td>
+                                    <td><?= $asset['status'] ? 'Aktif' : 'Nonaktif' ?></td>
                                     <td>
                                         <div class="btn-group">
-                                            <button type="button" class="btn btn-info">
+                                            <a href="/dashboard/gudang/view?id=<?= $asset['tu_branch_asset_id'] ?>"
+                                                class="btn btn-info">
                                                 <i class="fas fa-eye"></i>
-                                            </button>
-                                            <button type="button" class="btn btn-info">
+                                            </a>
+                                            <a href="/dashboard/gudang/edit?id=<?= $asset['tu_branch_asset_id'] ?>"
+                                                class="btn btn-info">
                                                 <i class="fas fa-edit"></i>
-                                            </button>
-                                            <button type="button" class="btn btn-info">
+                                            </a>
+                                            <a href="/dashboard/gudang/hapus?id=<?= $asset['tu_branch_asset_id'] ?>"
+                                                class="btn btn-info" onclick="return confirm('Are you sure?')">
                                                 <i class="fas fa-trash"></i>
-                                            </button>
+                                            </a>
                                         </div>
                                     </td>
                                 </tr>
-                                <tr class="even">
-                                    <td class="dtr-control sorting_1" tabindex="0">Gecko</td>
-                                    <td>Firefox 1.5</td>
-                                    <td>Win 98+ / OSX.2+</td>
-                                    <td>1.8</td>
-                                    <td>A</td>
-                                </tr>
-                                <tr class="odd">
-                                    <td class="dtr-control sorting_1" tabindex="0">Gecko</td>
-                                    <td>Firefox 2.0</td>
-                                    <td>Win 98+ / OSX.2+</td>
-                                    <td>1.8</td>
-                                    <td>A</td>
-                                </tr>
-                                <tr class="even">
-                                    <td class="dtr-control sorting_1" tabindex="0">Gecko</td>
-                                    <td>Firefox 3.0</td>
-                                    <td>Win 2k+ / OSX.3+</td>
-                                    <td>1.9</td>
-                                    <td>A</td>
-                                </tr>
-                                <tr class="odd">
-                                    <td class="sorting_1 dtr-control">Gecko</td>
-                                    <td>Camino 1.0</td>
-                                    <td>OSX.2+</td>
-                                    <td>1.8</td>
-                                    <td>A</td>
-                                </tr>
-                                <tr class="even">
-                                    <td class="sorting_1 dtr-control">Gecko</td>
-                                    <td>Camino 1.5</td>
-                                    <td>OSX.3+</td>
-                                    <td>1.8</td>
-                                    <td>A</td>
-                                </tr>
-                                <tr class="odd">
-                                    <td class="sorting_1 dtr-control">Gecko</td>
-                                    <td>Netscape 7.2</td>
-                                    <td>Win 95+ / Mac OS 8.6-9.2</td>
-                                    <td>1.7</td>
-                                    <td>A</td>
-                                </tr>
-                                <tr class="even">
-                                    <td class="sorting_1 dtr-control">Gecko</td>
-                                    <td>Netscape Browser 8</td>
-                                    <td>Win 98SE+</td>
-                                    <td>1.7</td>
-                                    <td>A</td>
-                                </tr>
-                                <tr class="odd">
-                                    <td class="sorting_1 dtr-control">Gecko</td>
-                                    <td>Netscape Navigator 9</td>
-                                    <td>Win 98+ / OSX.2+</td>
-                                    <td>1.8</td>
-                                    <td>A</td>
-                                </tr>
-                                <tr class="even">
-                                    <td class="sorting_1 dtr-control">Gecko</td>
-                                    <td>Mozilla 1.0</td>
-                                    <td>Win 95+ / OSX.1+</td>
-                                    <td>1</td>
-                                    <td>A</td>
-                                </tr>
+                                <?php endforeach; ?>
                             </tbody>
-                            <tfoot>
-                                <tr>
-                                    <th rowspan="1" colspan="1">Rendering engine</th>
-                                    <th rowspan="1" colspan="1">Browser</th>
-                                    <th rowspan="1" colspan="1">Platform(s)</th>
-                                    <th rowspan="1" colspan="1">Engine version</th>
-                                    <th rowspan="1" colspan="1">CSS grade</th>
-                                </tr>
-                            </tfoot>
+
                         </table>
                     </div>
                 </div>

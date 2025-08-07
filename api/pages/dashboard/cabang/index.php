@@ -1,3 +1,11 @@
+<?php
+
+    require_once __DIR__ . '/../../../model/branch.php';
+    $branches = get_branch($_COOKIE['token']);
+
+?>
+
+
 <section class="content m-4">
     <div class="col-md-2 m-2 ml-auto"><a href="/dashboard/cabang/tambah" type="button"
             class="btn btn-info btn-block btn-flat"><i class="fa fa-plus"></i> tambah cabang</a></div>
@@ -26,83 +34,38 @@
                         <th>ID</th>
                         <th>Cabang</th>
                         <th>Alamat</th>
-                        <th>Asset (Rp)</th>
                         <th>Status</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
+                    <?php foreach ($branches as $branch): ?>
                     <tr>
-                        <td>183</td>
-                        <td>John Doe</td>
-                        <td>11-7-2014</td>
-                        <td><span class="tag tag-success">Approved</span></td>
-                        <td>Bacon .</td>
+                        <td><?= htmlspecialchars($branch['tu_user_branch_id']) ?></td>
+                        <td><?= htmlspecialchars($branch['branch_name']) ?></td>
+                        <td><?= htmlspecialchars($branch['branch_address']) ?></td>
                         <td>
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-info">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                <button type="button" class="btn btn-info">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </div>
+                            <span class="tag 
+                    <?= $branch['status'] === 'ACTIVE' ? 'tag-success' : 
+                        ($branch['status'] === 'pending' ? 'tag-warning' : 
+                        ($branch['status'] === 'denied' ? 'tag-danger' : 'tag-info')) ?>">
+                                <?= ucfirst($branch['status']) ?>
+                            </span>
                         </td>
-
-                    </tr>
-                    <tr>
-                        <td>219</td>
-                        <td>Alexander Pierce</td>
-                        <td>11-7-2014</td>
-                        <td><span class="tag tag-warning">Pending</span></td>
-                        <td>Bacon .</td>
                         <td>
                             <div class="btn-group">
-                                <button type="button" class="btn btn-info">
+                                <a href="/dashboard/cabang/edit?id=<?= urlencode($branch['tu_user_branch_id']) ?>"
+                                    class="btn btn-info">
                                     <i class="fas fa-edit"></i>
-                                </button>
-                                <button type="button" class="btn btn-info">
+                                </a>
+                                <a href="/dashboard/cabang/hapus?id=<?= urlencode($branch['tu_user_branch_id']) ?>"
+                                    class="btn btn-info" onclick="return confirm('Yakin ingin menghapus cabang ini?')">
                                     <i class="fas fa-trash"></i>
-                                </button>
-                            </div>
-                        </td>
-
-                    </tr>
-                    <tr>
-                        <td>657</td>
-                        <td>Bob Doe</td>
-                        <td>11-7-2014</td>
-                        <td><span class="tag tag-info">Approved</span></td>
-                        <td>Bacon .</td>
-                        <td>
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-info">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                <button type="button" class="btn btn-info">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </div>
-                        </td>
-
-                    </tr>
-                    <tr>
-                        <td>175</td>
-                        <td>Mike Doe</td>
-                        <td>11-7-2014</td>
-                        <td><span class="tag tag-danger">Denied</span></td>
-                        <td>Bacon .</td>
-                        <td>
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-info">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                <button type="button" class="btn btn-info">
-                                    <i class="fas fa-trash"></i>
-                                </button>
+                                </a>
                             </div>
                         </td>
                     </tr>
+                    <?php endforeach; ?>
                 </tbody>
             </table>
         </div>
