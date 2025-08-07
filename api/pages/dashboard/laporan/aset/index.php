@@ -1,53 +1,109 @@
-<section class="content m-4">
+<?php
+require_once __DIR__ . '/../../../../model/report.php';
 
+$token = $_COOKIE['token'] ?? null;
+$summary = get_asset_summary($token);
+
+// Persiapkan data untuk Chart.js
+$labels = [];
+$data = [];
+
+foreach ($summary['modal_per_branch'] as $row) {
+    $labels[] = $row['branch_name'];
+    $data[] = $row['modal_per_branch'];
+}
+
+// Konversi ke JSON untuk dipakai di JS
+$chart_labels = json_encode($labels);
+$chart_data = json_encode($data);
+?>
+
+<section class="content m-4">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
 
-
-
     <!-- Content Wrapper -->
-    <section class="content m-4">
-        <div class="card card-primary card-outline">
-            <div class="card-header">
-                <h3 class="card-title">
-                    <i class="far fa-chart-bar"></i>
-                    Distribusi Modal Aset
-                </h3>
-
-                <div class="card-tools">
-                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                        <i class="fas fa-minus"></i>
-                    </button>
-                    <button type="button" class="btn btn-tool" data-card-widget="remove">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-            </div>
-            <div class="card-body">
-                <canvas id="donutChart"
-                    style="min-height: 300px; height: 300px; max-height: 300px; width: 100%;"></canvas>
-            </div>
-            <!-- /.card-body-->
+    <div class="card card-primary card-outline">
+        <div class="card-header">
+            <h3 class="card-title">
+                <i class="far fa-chart-bar"></i>
+                Distribusi Modal Aset per Cabang
+            </h3>
         </div>
-    </section>
+        <div class="card-body">
+            <canvas id="donutChart" style="min-height: 300px; height: 300px;"></canvas>
+        </div>
     </div>
 
-    <!-- JS -->
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
+    <!-- Tabel Sisa Aset -->
+    <div class="card card-outline card-success">
+        <div class="card-header">
+            <h3 class="card-title">Sisa Aset per Cabang</h3>
+        </div>
+        <div class="card-body table-responsive p-0">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Cabang</th>
+                        <th>Nama Aset</th>
+                        <th>Sisa Qty</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($summary['sisa_asset_per_branch'] as $row): ?>
+                        <tr>
+                            <td><?= htmlspecialchars($row['branch_name']) ?></td>
+                            <td><?= htmlspecialchars($row['name']) ?></td>
+                            <td><?= (int)$row['sisa_qty'] ?></td>
+                        </tr>
+                    <?php endforeach ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
 
-    <!-- Inisialisasi Chart.js -->
-    <script>
+    <!-- Tabel Penjualan Aset -->
+    <div class="card card-outline card-info">
+        <div class="card-header">
+            <h3 class="card-title">Aset Terjual per Cabang</h3>
+        </div>
+        <div class="card-body table-responsive p-0">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Cabang</th>
+                        <th>Nama Aset</th>
+                        <th>Total Terjual</th>
+                        <th>Total Income</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($summary['penjualan_per_branch'] as $row): ?>
+                        <tr>
+                            <td><?= htmlspecialchars($row['branch_name']) ?></td>
+                            <td><?= htmlspecialchars($row['name']) ?></td>
+                            <td><?= (int)$row['total_terjual'] ?></td>
+                            <td>Rp<?= number_format((int)$row['total_income'], 0, ',', '.') ?></td>
+                        </tr>
+                    <?php endforeach ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<!-- JS -->
+<script>
     document.addEventListener("DOMContentLoaded", function() {
-        const donutCtx = document.getElementById("donutChart").getContext("2d");
-
-        new Chart(donutCtx, {
+        const ctx = document.getElementById("donutChart").getContext("2d");
+        const chart = new Chart(ctx, {
             type: 'doughnut',
             data: {
-                labels: ["Modal", "Utang", "Asset"],
+                labels: <?= $chart_labels ?>,
                 datasets: [{
-                    data: [50, 30, 20],
-                    backgroundColor: ['#007bff', '#dc3545', '#ffc107'],
+                    data: <?= $chart_data ?>,
+                    backgroundColor: ['#007bff', '#dc3545', '#ffc107', '#28a745', '#6610f2',
+                        '#17a2b8'
+                    ]
                 }]
             },
             options: {
@@ -55,13 +111,12 @@
                 responsive: true,
                 legend: {
                     position: 'bottom',
+                },
+                title: {
+                    display: true,
+                    text: 'Distribusi Modal per Cabang'
                 }
             }
         });
     });
-    </script>
-    </body>
-
-
-
-</section>
+</script>

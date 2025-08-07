@@ -7,7 +7,8 @@
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" role="menu">
                 <?php
-                function isActive($pattern) {
+                function isActive($pattern)
+                {
                     global $currentUri;
                     return strpos($currentUri, $pattern) !== false ? 'active' : '';
                 }
@@ -61,21 +62,17 @@
                                     <p>Aset</p>
                                 </a>
                             </li>
-                            <li class="nav-item">
-                                <a href="/dashboard/laporan/perkembangan" class="nav-link">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Perkembangan</p>
-                                </a>
-                            </li>
-                        </ul>
+
                     </li>
                 </ul>
-                <li class="nav-item">
-                    <a href="/dashboard/edukasi" class="nav-link <?= isActive('/transaksi') ?>">
-                        <i class="nav-icon fas fa-school"></i>
-                        <p>Edukasi</p>
-                    </a>
                 </li>
+            </ul>
+            <li class="nav-item">
+                <a href="/dashboard/edukasi" class="nav-link <?= isActive('/transaksi') ?>">
+                    <i class="nav-icon fas fa-school"></i>
+                    <p>Edukasi</p>
+                </a>
+            </li>
             </ul>
         </nav>
     </div>

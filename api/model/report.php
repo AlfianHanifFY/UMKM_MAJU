@@ -106,3 +106,66 @@ function get_monthly_income($branch_id, $year = null)
 
     return $monthlyIncome;
 }
+function get_asset_summary($token)
+{
+    $summary = [];
+
+    // Total modal awal semua aset milik user
+    $sql = "
+        SELECT 
+            SUM(ba.buy_price * ba.quantity) AS total_modal 
+        FROM tu_branch_asset ba
+        JOIN tu_user_branch ub ON ba.branch_id = ub.tu_user_branch_id
+        JOIN tu_user u ON ub.user_id = u.tu_users_id
+        WHERE u.tu_users_id = $1
+    ";
+    $modal = db_fetch_all($sql, [$token])[0];
+    $summary['total_modal'] = $modal['total_modal'] ?? 0;
+
+    // Distribusi modal ke setiap cabang
+    $sql = "
+        SELECT 
+            ub.branch_name,
+            SUM(ba.buy_price * ba.quantity) AS modal_per_branch
+        FROM tu_branch_asset ba
+        JOIN tu_user_branch ub ON ba.branch_id = ub.tu_user_branch_id
+        JOIN tu_user u ON ub.user_id = u.tu_users_id
+        WHERE u.tu_users_id = $1
+        GROUP BY ub.branch_name
+    ";
+    $summary['modal_per_branch'] = db_fetch_all($sql, [$token]);
+
+    // Sisa aset di semua cabang
+    $sql = "
+        SELECT 
+            ba.name,
+            ub.branch_name,
+            ba.quantity AS sisa_qty
+        FROM tu_branch_asset ba
+        JOIN tu_user_branch ub ON ba.branch_id = ub.tu_user_branch_id
+        JOIN tu_user u ON ub.user_id = u.tu_users_id
+        WHERE u.tu_users_id = $1
+        ORDER BY ba.name, ub.branch_name
+    ";
+    $summary['sisa_asset_per_branch'] = db_fetch_all($sql, [$token]);
+
+    // Aset terjual per cabang
+    $sql = "
+        SELECT 
+            ub.branch_name,
+            ba.name,
+            SUM(at.quantity) AS total_terjual,
+            SUM(at.total) AS total_income
+        FROM tu_asset_transaction at
+        JOIN tu_branch_asset ba ON at.asset_id = ba.tu_branch_asset_id
+        JOIN tu_transaction t ON at.transaction_id = t.tu_transaction_id
+        JOIN tu_user_branch ub ON t.branch_id = ub.tu_user_branch_id
+        JOIN tu_user u ON ub.user_id = u.tu_users_id
+        WHERE u.tu_users_id = $1
+        GROUP BY ub.branch_name, ba.name
+        ORDER BY ub.branch_name, ba.name
+    ";
+    $summary['penjualan_per_branch'] = db_fetch_all($sql, [$token]);
+
+    return $summary;
+}
