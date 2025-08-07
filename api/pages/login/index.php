@@ -1,7 +1,5 @@
 <?php
-
 require_once __DIR__ . '/../../model/user.php';
-
 if (isset($_COOKIE['token'])) {
     header("Location: /dashboard");
     exit;
@@ -12,7 +10,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = $_POST['password'] ?? '';
 
     $validUser = validate_user($email, $password);
-    print_r($validUser);
     if ($validUser) {
         // Set cookie dan redirect dengan JS agar cookie diproses
         setcookie("token", $validUser['tu_users_id'], time() + 3600, "/");
