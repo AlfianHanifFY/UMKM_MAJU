@@ -157,7 +157,7 @@ function exportPDF($assets)
             <?php else: ?>
                 <div id="example1_wrapper" class="dataTables_wrapper dt-bootstrap4">
                     <div class="row">
-                        <div class="col-sm-12 col-md-6">
+                        <div class="col-sm-12 col-md-6 m-2">
                             <div class="dt-buttons btn-group flex-wrap">
                                 <a href="/dashboard/gudang/tambah<?= $selected_branch_id ? '?branch_id=' . $selected_branch_id : '' ?>"
                                     class="btn btn-info buttons-copy buttons-html5" tabindex="0" aria-controls="example1"
@@ -182,14 +182,7 @@ function exportPDF($assets)
                                 </button>
                             </div>
                         </div>
-                        <div class="col-sm-12 col-md-6">
-                            <div id="example1_filter" class="dataTables_filter">
-                                <label>Search:
-                                    <input type="search" class="form-control form-control-sm" placeholder=""
-                                        aria-controls="example1" id="searchInput">
-                                </label>
-                            </div>
-                        </div>
+
                     </div>
 
                     <div class="row">
