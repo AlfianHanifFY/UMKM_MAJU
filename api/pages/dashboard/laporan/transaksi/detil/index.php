@@ -25,7 +25,7 @@ $branch = get_branch_by_id($transaction['branch_id']);
         <div class="row">
             <div class="col-12">
                 <h4>
-                    <i class="fas fa-globe"></i> Teman Usaha, Inc.
+                    <i class="fas fa-globe"></i> Teman Usaha
                     <small class="float-right">Date: <?= date('d/m/Y', strtotime($transaction['createdat'])) ?></small>
                 </h4>
             </div>

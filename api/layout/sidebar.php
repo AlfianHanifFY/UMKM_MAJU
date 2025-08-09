@@ -1,7 +1,8 @@
 <!-- Sidebar -->
 <aside class="main-sidebar sidebar-dark-info elevation-4">
-    <a href="/dashboard" class="brand-link">
-        <span class="brand-text font-weight-light ml-3">Teman Usaha</span>
+    <a href="/dashboard" class="brand-link d-flex align-items-center">
+        <img src="/layout/teman-usaha-logo.png" alt="Logo Teman Usaha" style="height: 45px; width: auto;">
+        <span class="brand-text font-weight-light ml-2">Teman Usaha</span>
     </a>
     <div class="sidebar">
         <nav class="mt-2">

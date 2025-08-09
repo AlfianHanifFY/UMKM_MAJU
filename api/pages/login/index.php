@@ -43,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <p class="login-box-msg">Sign in to start your session</p>
 
                 <?php if (!empty($error)): ?>
-                <div class="alert alert-danger"><?= htmlspecialchars($error) ?></div>
+                    <div class="alert alert-danger"><?= htmlspecialchars($error) ?></div>
                 <?php endif; ?>
 
                 <form action="" method="post">
@@ -61,9 +61,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                     <div class="row">
                         <div class="col-8">
-                            <div class="icheck-info">
-                                <input type="checkbox" id="remember">
-                                <label for="remember">Remember Me</label>
+                            <div class="col-6">
+                                <a href="/register">
+                                    <span>register</span>
+                                </a>
+
                             </div>
                         </div>
                         <div class="col-4">

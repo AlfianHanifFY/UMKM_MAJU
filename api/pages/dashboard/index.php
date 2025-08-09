@@ -1,329 +1,125 @@
 <?php
 require_once __DIR__ . '/../../model/user.php';
+require_once __DIR__ . '/../../model/dashboard.php';
+
+// Ambil data user
 $user = get_user($_COOKIE['token']);
 $nama = $user['display_name'];
-?>
 
+// Ambil data ringkasan dashboard
+$summary = get_dashboard_summary($_COOKIE['token']);
+?>
 <div class="content">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
 
-    <!-- Content Header (Page header) -->
-    <div class=" content-header">
+    <!-- Content Header -->
+    <div class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Halo, <?php echo $nama?>!</h1>
-                </div><!-- /.col -->
-
-            </div><!-- /.row -->
-        </div><!-- /.container-fluid -->
+                    <h1 class="m-0">Halo, <?php echo htmlspecialchars($nama); ?>!</h1>
+                </div>
+            </div>
+        </div>
     </div>
-    <!-- /.content-header -->
 
     <!-- Main content -->
     <div class="content">
         <div class="container-fluid">
             <div class="row">
-                <div class="col-lg-6">
-                    <div class="card">
-                        <div class="card-header border-0">
-                            <div class="d-flex justify-content-between">
-                                <h3 class="card-title">Online Store Visitors</h3>
-                                <a href="javascript:void(0);">View Report</a>
-                            </div>
+
+                <!-- Card Total Cabang -->
+                <div class="col-lg-3 col-6">
+                    <div class="small-box bg-info">
+                        <div class="inner">
+                            <h3><?php echo $summary['total_cabang']; ?></h3>
+                            <p>Total Cabang Usaha</p>
                         </div>
-                        <div class="card-body">
-                            <div class="d-flex">
-                                <p class="d-flex flex-column">
-                                    <span class="text-bold text-lg">820</span>
-                                    <span>Visitors Over Time</span>
-                                </p>
-                                <p class="ml-auto d-flex flex-column text-right">
-                                    <span class="text-success">
-                                        <i class="fas fa-arrow-up"></i> 12.5%
-                                    </span>
-                                    <span class="text-muted">Since last week</span>
-                                </p>
-                            </div>
-                            <!-- /.d-flex -->
-
-                            <div class="position-relative mb-4">
-                                <div class="chartjs-size-monitor">
-                                    <div class="chartjs-size-monitor-expand">
-                                        <div class=""></div>
-                                    </div>
-                                    <div class="chartjs-size-monitor-shrink">
-                                        <div class=""></div>
-                                    </div>
-                                </div>
-                                <canvas id="visitors-chart" height="400" width="1738" class="chartjs-render-monitor"
-                                    style="display: block; height: 200px; width: 869px;"></canvas>
-                                <script>
-                                document.addEventListener("DOMContentLoaded", function() {
-                                    const ctx = document.getElementById('visitors-chart').getContext('2d');
-
-                                    new Chart(ctx, {
-                                        type: 'line',
-                                        data: {
-                                            labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-                                            datasets: [{
-                                                label: 'This Week',
-                                                data: [100, 120, 150, 170, 180, 200, 220],
-                                                borderColor: 'rgba(60,141,188,0.8)',
-                                                backgroundColor: 'rgba(60,141,188,0.2)',
-                                                fill: true
-                                            }, {
-                                                label: 'Last Week',
-                                                data: [80, 100, 130, 160, 170, 190, 200],
-                                                borderColor: '#ced4da',
-                                                backgroundColor: '#e9ecef',
-                                                fill: true
-                                            }]
-                                        },
-                                        options: {
-                                            responsive: true,
-                                            maintainAspectRatio: false,
-                                            legend: {
-                                                display: false
-                                            }
-                                        }
-                                    });
-                                });
-                                </script>
-
-                            </div>
-
-                            <div class="d-flex flex-row justify-content-end">
-                                <span class="mr-2">
-                                    <i class="fas fa-square text-info"></i> This Week
-                                </span>
-
-                                <span>
-                                    <i class="fas fa-square text-gray"></i> Last Week
-                                </span>
-                            </div>
+                        <div class="icon">
+                            <i class="fas fa-store"></i>
                         </div>
                     </div>
-                    <!-- /.card -->
+                </div>
 
+                <!-- Card Total Modal -->
+                <div class="col-lg-3 col-6">
+                    <div class="small-box bg-success">
+                        <div class="inner">
+                            <h3>Rp <?php echo number_format($summary['total_modal'], 0, ',', '.'); ?></h3>
+                            <p>Total Modal</p>
+                        </div>
+                        <div class="icon">
+                            <i class="fas fa-coins"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card Total Transaksi -->
+                <div class="col-lg-3 col-6">
+                    <div class="small-box bg-warning">
+                        <div class="inner">
+                            <h3>Rp <?php echo number_format($summary['total_transaksi'], 0, ',', '.'); ?></h3>
+                            <p>Total Transaksi</p>
+                        </div>
+                        <div class="icon">
+                            <i class="fas fa-cash-register"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card Total Profit -->
+                <div class="col-lg-3 col-6">
+                    <div class="small-box bg-danger">
+                        <div class="inner">
+                            <h3>Rp <?php echo number_format($summary['total_profit'], 0, ',', '.'); ?></h3>
+                            <p>Total Profit</p>
+                        </div>
+                        <div class="icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <!-- /.row -->
+
+            <!-- Tabel Ringkasan Asset -->
+            <div class="row">
+                <div class="col-12">
                     <div class="card">
                         <div class="card-header border-0">
-                            <h3 class="card-title">Products</h3>
-                            <div class="card-tools">
-                                <a href="#" class="btn btn-tool btn-sm">
-                                    <i class="fas fa-download"></i>
-                                </a>
-                                <a href="#" class="btn btn-tool btn-sm">
-                                    <i class="fas fa-bars"></i>
-                                </a>
-                            </div>
+                            <h3 class="card-title">Ringkasan Aset per Cabang</h3>
                         </div>
                         <div class="card-body table-responsive p-0">
                             <table class="table table-striped table-valign-middle">
                                 <thead>
                                     <tr>
-                                        <th>Product</th>
-                                        <th>Price</th>
-                                        <th>Sales</th>
-                                        <th>More</th>
+                                        <th>Cabang</th>
+                                        <th>Jumlah Item</th>
+                                        <th>Total Stok</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>
-                                            <img src="dist/img/default-150x150.png" alt="Product 1"
-                                                class="img-circle img-size-32 mr-2">
-                                            Some Product
-                                        </td>
-                                        <td>$13 USD</td>
-                                        <td>
-                                            <small class="text-success mr-1">
-                                                <i class="fas fa-arrow-up"></i>
-                                                12%
-                                            </small>
-                                            12,000 Sold
-                                        </td>
-                                        <td>
-                                            <a href="#" class="text-muted">
-                                                <i class="fas fa-search"></i>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <img src="dist/img/default-150x150.png" alt="Product 1"
-                                                class="img-circle img-size-32 mr-2">
-                                            Another Product
-                                        </td>
-                                        <td>$29 USD</td>
-                                        <td>
-                                            <small class="text-warning mr-1">
-                                                <i class="fas fa-arrow-down"></i>
-                                                0.5%
-                                            </small>
-                                            123,234 Sold
-                                        </td>
-                                        <td>
-                                            <a href="#" class="text-muted">
-                                                <i class="fas fa-search"></i>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <img src="dist/img/default-150x150.png" alt="Product 1"
-                                                class="img-circle img-size-32 mr-2">
-                                            Amazing Product
-                                        </td>
-                                        <td>$1,230 USD</td>
-                                        <td>
-                                            <small class="text-danger mr-1">
-                                                <i class="fas fa-arrow-down"></i>
-                                                3%
-                                            </small>
-                                            198 Sold
-                                        </td>
-                                        <td>
-                                            <a href="#" class="text-muted">
-                                                <i class="fas fa-search"></i>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <img src="dist/img/default-150x150.png" alt="Product 1"
-                                                class="img-circle img-size-32 mr-2">
-                                            Perfect Item
-                                            <span class="badge bg-danger">NEW</span>
-                                        </td>
-                                        <td>$199 USD</td>
-                                        <td>
-                                            <small class="text-success mr-1">
-                                                <i class="fas fa-arrow-up"></i>
-                                                63%
-                                            </small>
-                                            87 Sold
-                                        </td>
-                                        <td>
-                                            <a href="#" class="text-muted">
-                                                <i class="fas fa-search"></i>
-                                            </a>
-                                        </td>
-                                    </tr>
+                                    <?php foreach ($summary['asset_overview'] as $row): ?>
+                                        <tr>
+                                            <td><?php echo htmlspecialchars($row['branch_name']); ?></td>
+                                            <td><?php echo $row['total_item']; ?></td>
+                                            <td><?php echo $row['total_qty']; ?></td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                    <?php if (empty($summary['asset_overview'])): ?>
+                                        <tr>
+                                            <td colspan="3" class="text-center">Belum ada data aset</td>
+                                        </tr>
+                                    <?php endif; ?>
                                 </tbody>
                             </table>
                         </div>
                     </div>
-                    <!-- /.card -->
                 </div>
-                <!-- /.col-md-6 -->
-                <div class="col-lg-6">
-                    <div class="card">
-                        <div class="card-header border-0">
-                            <div class="d-flex justify-content-between">
-                                <h3 class="card-title">Sales</h3>
-                                <a href="javascript:void(0);">View Report</a>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <div class="d-flex">
-                                <p class="d-flex flex-column">
-                                    <span class="text-bold text-lg">$18,230.00</span>
-                                    <span>Sales Over Time</span>
-                                </p>
-                                <p class="ml-auto d-flex flex-column text-right">
-                                    <span class="text-success">
-                                        <i class="fas fa-arrow-up"></i> 33.1%
-                                    </span>
-                                    <span class="text-muted">Since last month</span>
-                                </p>
-                            </div>
-                            <!-- /.d-flex -->
-
-                            <div class="position-relative mb-4">
-                                <div class="chartjs-size-monitor">
-                                    <div class="chartjs-size-monitor-expand">
-                                        <div class=""></div>
-                                    </div>
-                                    <div class="chartjs-size-monitor-shrink">
-                                        <div class=""></div>
-                                    </div>
-                                </div>
-                                <canvas id="sales-chart" height="400" width="1738" class="chartjs-render-monitor"
-                                    style="display: block; height: 200px; width: 869px;"></canvas>
-                            </div>
-
-                            <div class="d-flex flex-row justify-content-end">
-                                <span class="mr-2">
-                                    <i class="fas fa-square text-info"></i> This year
-                                </span>
-
-                                <span>
-                                    <i class="fas fa-square text-gray"></i> Last year
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- /.card -->
-
-                    <div class="card">
-                        <div class="card-header border-0">
-                            <h3 class="card-title">Online Store Overview</h3>
-                            <div class="card-tools">
-                                <a href="#" class="btn btn-sm btn-tool">
-                                    <i class="fas fa-download"></i>
-                                </a>
-                                <a href="#" class="btn btn-sm btn-tool">
-                                    <i class="fas fa-bars"></i>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-center border-bottom mb-3">
-                                <p class="text-success text-xl">
-                                    <i class="ion ion-ios-refresh-empty"></i>
-                                </p>
-                                <p class="d-flex flex-column text-right">
-                                    <span class="font-weight-bold">
-                                        <i class="ion ion-android-arrow-up text-success"></i> 12%
-                                    </span>
-                                    <span class="text-muted">CONVERSION RATE</span>
-                                </p>
-                            </div>
-                            <!-- /.d-flex -->
-                            <div class="d-flex justify-content-between align-items-center border-bottom mb-3">
-                                <p class="text-warning text-xl">
-                                    <i class="ion ion-ios-cart-outline"></i>
-                                </p>
-                                <p class="d-flex flex-column text-right">
-                                    <span class="font-weight-bold">
-                                        <i class="ion ion-android-arrow-up text-warning"></i> 0.8%
-                                    </span>
-                                    <span class="text-muted">SALES RATE</span>
-                                </p>
-                            </div>
-                            <!-- /.d-flex -->
-                            <div class="d-flex justify-content-between align-items-center mb-0">
-                                <p class="text-danger text-xl">
-                                    <i class="ion ion-ios-people-outline"></i>
-                                </p>
-                                <p class="d-flex flex-column text-right">
-                                    <span class="font-weight-bold">
-                                        <i class="ion ion-android-arrow-down text-danger"></i> 1%
-                                    </span>
-                                    <span class="text-muted">REGISTRATION RATE</span>
-                                </p>
-                            </div>
-                            <!-- /.d-flex -->
-                        </div>
-                    </div>
-                </div>
-                <!-- /.col-md-6 -->
             </div>
-            <!-- /.row -->
+
         </div>
         <!-- /.container-fluid -->
     </div>
-    <!-- /.content -->
-
 </div>
